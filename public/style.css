@@ -1,0 +1,237 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #1b1b1b;
+  color: white;
+}
+
+.game-container {
+  width: min(1100px, 95%);
+  margin: 0 auto;
+  padding: 30px 0;
+}
+
+/* ========================================
+   상단 헤더
+   ======================================== */
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.game-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.game-header p {
+  margin: 5px 0 0;
+  color: #aaa;
+}
+
+.turn-info {
+  text-align: right;
+}
+
+.turn-info span {
+  display: block;
+  color: #aaa;
+  font-size: 14px;
+}
+
+.turn-info strong {
+  font-size: 28px;
+}
+
+/* ========================================
+   플레이어 영역
+   ======================================== */
+
+.player-area {
+  padding: 20px;
+  border-radius: 12px;
+  background: #252525;
+  margin-bottom: 20px;
+}
+
+.player-name {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.opponent-cards,
+.my-cards {
+  display: flex;
+  gap: 10px;
+  min-height: 80px;
+}
+
+.hidden-card {
+  width: 60px;
+  height: 80px;
+  border-radius: 8px;
+  background: #444;
+  border: 2px solid #666;
+}
+
+/* ========================================
+   소변기 영역
+   ======================================== */
+
+.board-area {
+  padding: 30px 10px;
+  overflow-x: auto;
+}
+
+.urinal-board {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  min-width: 850px;
+}
+
+.urinal {
+  width: 65px;
+  height: 120px;
+  border-radius: 10px;
+
+  /* 테스트용 노란색 */
+  background: #f5d76e;
+
+  border: 3px solid #aaa;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #333;
+  font-weight: bold;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+/* ========================================
+   사람이 있는 소변기
+   ======================================== */
+
+.urinal.occupied {
+  background: #555;
+  color: white;
+}
+
+/* ========================================
+   카드
+   ======================================== */
+
+.card {
+  width: 65px;
+  height: 85px;
+
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+  font-weight: bold;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* ========================================
+   카드 색상
+   ======================================== */
+
+/* 2~4 */
+.card.card-white {
+  background: white;
+  color: #111;
+  border: 3px solid #aaa;
+}
+
+/* 5~7 */
+.card.card-gray {
+  background: #777;
+  color: white;
+  border: 3px solid #999;
+}
+
+/* 8 이상 */
+.card.card-black {
+  background: #111;
+  color: white;
+  border: 3px solid #333;
+}
+
+/* ========================================
+   선택한 카드
+   ======================================== */
+
+.card.selected {
+  transform: translateY(-8px);
+  border-color: #4da6ff;
+  box-shadow:
+    0 0 0 3px rgba(77, 166, 255, 0.35);
+}
+
+/* ========================================
+   버튼 영역
+   ======================================== */
+
+.action-area {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 12px 25px;
+
+  border: none;
+  border-radius: 8px;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+#end-button {
+  background: #4da6ff;
+  color: white;
+}
+
+#give-up-button {
+  background: #a33;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+/* 0 특별 카드 */
+.card.card-zero {
+background: #d93636;
+color: white;
+border: 3px solid #ff6666;
+}

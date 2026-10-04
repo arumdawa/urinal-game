@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Urinal Game</title>
+
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+
+    <style>
+
+
+        /* ========================================
+           상단 게임 설정
+        ======================================== */
+
+        .game-setting-summary {
+
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(120px, 1fr)
+                );
+
+            gap: 8px;
+
+            margin-top: -10px;
+            margin-bottom: 22px;
+
+            padding: 12px;
+
+            background:
+                rgba(255, 255, 255, 0.04);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.1);
+
+            border-radius: 10px;
+        }
+
+
+        .game-setting-item {
+
+            min-height: 52px;
+
+            display: flex;
+            flex-direction: column;
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 7px 10px;
+
+            background:
+                rgba(0, 0, 0, 0.22);
+
+            border-radius: 7px;
+
+            text-align: center;
+        }
+
+
+        .game-setting-label {
+
+            margin-bottom: 4px;
+
+            color: #999;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+
+        .game-setting-value {
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        /* ========================================
+           카드 정보 색
+        ======================================== */
+
+        .setting-white {
+            color: white;
+        }
+
+
+        .setting-gray {
+            color: #aaa;
+        }
+
+
+        .setting-black {
+            color: #777;
+        }
+
+
+        .setting-zero {
+            color: #ff6b6b;
+        }
+
+
+        /* ========================================
+           청소 이벤트
+        ======================================== */
+
+        #cleaning-duration-setting {
+            display: none;
+        }
+
+
+        #cleaning-live-status {
+
+            display: none;
+
+            border:
+                1px solid
+                rgba(110, 198, 255, 0.55);
+
+            background:
+                rgba(22, 137, 216, 0.13);
+        }
+
+
+        #cleaning-live-status
+        .game-setting-label {
+
+            color: #74c7ff;
+        }
+
+
+        #cleaning-live-value {
+
+            color: #74c7ff;
+        }
+
+
+        #cleaning-live-status.active {
+
+            background:
+                rgba(22, 137, 216, 0.22);
+
+            box-shadow:
+                0 0 10px
+                rgba(22, 137, 216, 0.18);
+        }
+
+
+        /* ========================================
+           모바일
+        ======================================== */
+
+        @media (
+            max-width: 700px
+        ) {
+
+            .game-setting-summary {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <main class="game-container">
+
+
+        <!-- ========================================
+             헤더
+        ======================================== -->
+
+        <header class="game-header">
+
+
+            <div>
+
+                <h1>
+                    URINAL GAME
+                </h1>
+
+
+                <p id="game-mode-label">
+                    GAME
+                </p>
+
+            </div>
+
+
+            <div class="turn-info">
+
+                <span>
+                    현재 턴
+                </span>
+
+
+                <strong id="turn-number">
+                    1
+                </strong>
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- ========================================
+             게임 설정 요약
+        ======================================== -->
+
+        <section
+            id="game-setting-summary"
+            class="game-setting-summary"
+        >
+
+
+            <!-- AI 난이도 -->
+
+            <div
+                id="difficulty-setting"
+                class="game-setting-item"
+            >
+
+                <div class="game-setting-label">
+                    AI 난이도
+                </div>
+
+
+                <div
+                    id="difficulty-setting-value"
+                    class="game-setting-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <!-- 변기 -->
+
+            <div class="game-setting-item">
+
+                <div class="game-setting-label">
+                    변기 수
+                </div>
+
+
+                <div
+                    id="urinal-setting-value"
+                    class="game-setting-value"
+                >
+                    12개
+                </div>
+
+            </div>
+
+
+            <!-- 0 -->
+
+            <div class="game-setting-item">
+
+                <div class="game-setting-label">
+                    0 카드
+                </div>
+
+
+                <div
+                    id="zero-setting-value"
+                    class="
+                        game-setting-value
+                        setting-zero
+                    "
+                >
+                    1장
+                </div>
+
+            </div>
+
+
+            <!-- 흰색 -->
+
+            <div class="game-setting-item">
+
+                <div class="game-setting-label">
+                    흰색 카드
+                </div>
+
+
+                <div
+                    id="white-setting-value"
+                    class="
+                        game-setting-value
+                        setting-white
+                    "
+                >
+                    7세트
+                </div>
+
+            </div>
+
+
+            <!-- 회색 -->
+
+            <div class="game-setting-item">
+
+                <div class="game-setting-label">
+                    회색 카드
+                </div>
+
+
+                <div
+                    id="gray-setting-value"
+                    class="
+                        game-setting-value
+                        setting-gray
+                    "
+                >
+                    3세트
+                </div>
+
+            </div>
+
+
+            <!-- 검정 -->
+
+            <div class="game-setting-item">
+
+                <div class="game-setting-label">
+                    검정 카드
+                </div>
+
+
+                <div
+                    id="black-setting-value"
+                    class="
+                        game-setting-value
+                        setting-black
+                    "
+                >
+                    1세트
+                </div>
+
+            </div>
+
+
+            <!-- 총 세트 -->
+
+            <div class="game-setting-item">
+
+                <div class="game-setting-label">
+                    총 카드 세트
+                </div>
+
+
+                <div
+                    id="total-setting-value"
+                    class="game-setting-value"
+                >
+                    11세트
+                </div>
+
+            </div>
+
+
+            <!-- 청소 -->
+
+            <div class="game-setting-item">
+
+                <div class="game-setting-label">
+                    청소 이벤트
+                </div>
+
+
+                <div
+                    id="cleaning-setting-value"
+                    class="game-setting-value"
+                >
+                    NO
+                </div>
+
+            </div>
+
+
+            <!-- 청소시간 -->
+
+            <div
+                id="cleaning-duration-setting"
+                class="game-setting-item"
+            >
+
+                <div class="game-setting-label">
+                    청소시간
+                </div>
+
+
+                <div
+                    id="cleaning-duration-value"
+                    class="game-setting-value"
+                >
+                    10턴
+                </div>
+
+            </div>
+
+
+            <!-- 실시간 청소 상태 -->
+
+            <div
+                id="cleaning-live-status"
+                class="game-setting-item"
+            >
+
+                <div
+                    id="cleaning-live-label"
+                    class="game-setting-label"
+                >
+                    청소 이벤트
+                </div>
+
+
+                <div
+                    id="cleaning-live-value"
+                    class="game-setting-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ========================================
+             상대 플레이어
+        ======================================== -->
+
+        <section
+            class="player-area opponent"
+        >
+
+
+            <div class="player-name">
+                PLAYER 2
+            </div>
+
+
+            <div class="opponent-cards">
+
+                <!-- JS가 생성 -->
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ========================================
+             게임판
+        ======================================== -->
+
+        <section class="board-area">
+
+
+            <div
+                id="urinal-board"
+                class="urinal-board"
+            >
+
+                <!-- JS가 변기 생성 -->
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ========================================
+             내 영역
+        ======================================== -->
+
+        <section
+            class="player-area me"
+        >
+
+
+            <div
+                id="my-player-name"
+                class="player-name"
+            >
+                PLAYER 1
+            </div>
+
+
+            <div
+                id="my-cards"
+                class="my-cards"
+            >
+
+                <!-- JS가 카드 생성 -->
+
+            </div>
+
+
+            <div class="action-area">
+
+
+                <!--
+                기능상 ID는 그대로 end-button
+
+                화면 표시만 SET
+                -->
+
+                <button id="end-button">
+                    SET
+                </button>
+
+
+                <button id="give-up-button">
+                    GIVE UP
+                </button>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ========================================
+         SOCKET.IO
+
+         VS PERSON에서 필요
+         VS AI에서는 로드되어 있어도 문제없음
+    ======================================== -->
+
+    <script src="/socket.io/socket.io.js"></script>
+
+
+
+    <!-- ========================================
+         상단 게임 설정 정보
+    ======================================== -->
+
+    <script>
+
+        (() => {
+
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+
+            function readNumber(
+                name,
+                defaultValue
+            ) {
+
+                const value =
+                    Number(
+                        params.get(name)
+                    );
+
+
+                if (
+                    !Number.isInteger(value)
+                ) {
+
+                    return defaultValue;
+                }
+
+
+                return value;
+            }
+
+
+
+            // ====================================
+            // 설정값
+            // ====================================
+
+            const mode =
+                params.get("mode") ||
+                "ai";
+
+
+            const difficulty =
+                params.get("difficulty") ||
+                "easy";
+
+
+            const urinals =
+                readNumber(
+                    "urinals",
+                    12
+                );
+
+
+            const zeroCards =
+                readNumber(
+                    "zero",
+                    1
+                );
+
+
+            const whiteSets =
+                readNumber(
+                    "white",
+                    7
+                );
+
+
+            const graySets =
+                readNumber(
+                    "gray",
+                    3
+                );
+
+
+            const blackSets =
+                readNumber(
+                    "black",
+                    1
+                );
+
+
+            const totalSets =
+                whiteSets +
+                graySets +
+                blackSets;
+
+
+            const cleaningEnabled =
+                params.get("cleaning") ===
+                "yes";
+
+
+            const cleaningTurns =
+                readNumber(
+                    "cleaningTurns",
+                    10
+                );
+
+
+
+            // ====================================
+            // HTML
+            // ====================================
+
+            const gameModeLabel =
+                document.getElementById(
+                    "game-mode-label"
+                );
+
+
+            const difficultySetting =
+                document.getElementById(
+                    "difficulty-setting"
+                );
+
+
+            const difficultySettingValue =
+                document.getElementById(
+                    "difficulty-setting-value"
+                );
+
+
+            const urinalSettingValue =
+                document.getElementById(
+                    "urinal-setting-value"
+                );
+
+
+            const zeroSettingValue =
+                document.getElementById(
+                    "zero-setting-value"
+                );
+
+
+            const whiteSettingValue =
+                document.getElementById(
+                    "white-setting-value"
+                );
+
+
+            const graySettingValue =
+                document.getElementById(
+                    "gray-setting-value"
+                );
+
+
+            const blackSettingValue =
+                document.getElementById(
+                    "black-setting-value"
+                );
+
+
+            const totalSettingValue =
+                document.getElementById(
+                    "total-setting-value"
+                );
+
+
+            const cleaningSettingValue =
+                document.getElementById(
+                    "cleaning-setting-value"
+                );
+
+
+            const cleaningDurationSetting =
+                document.getElementById(
+                    "cleaning-duration-setting"
+                );
+
+
+            const cleaningDurationValue =
+                document.getElementById(
+                    "cleaning-duration-value"
+                );
+
+
+            const cleaningLiveStatus =
+                document.getElementById(
+                    "cleaning-live-status"
+                );
+
+
+            const cleaningLiveLabel =
+                document.getElementById(
+                    "cleaning-live-label"
+                );
+
+
+            const cleaningLiveValue =
+                document.getElementById(
+                    "cleaning-live-value"
+                );
+
+
+
+            // ====================================
+            // 모드
+            // ====================================
+
+            if (
+                mode === "person"
+            ) {
+
+                gameModeLabel.textContent =
+                    "VS PERSON";
+
+
+                difficultySetting.style.display =
+                    "none";
+
+            }
+
+            else {
+
+                gameModeLabel.textContent =
+                    "VS AI";
+
+
+                difficultySetting.style.display =
+                    "flex";
+
+
+                difficultySettingValue.textContent =
+                    difficulty.toUpperCase();
+            }
+
+
+
+            // ====================================
+            // 기본 게임 설정
+            // ====================================
+
+            urinalSettingValue.textContent =
+                urinals +
+                "개";
+
+
+            zeroSettingValue.textContent =
+                zeroCards +
+                "장";
+
+
+            whiteSettingValue.textContent =
+                whiteSets +
+                "세트";
+
+
+            graySettingValue.textContent =
+                graySets +
+                "세트";
+
+
+            blackSettingValue.textContent =
+                blackSets +
+                "세트";
+
+
+            totalSettingValue.textContent =
+                totalSets +
+                "세트";
+
+
+
+            // ====================================
+            // 청소 설정
+            // ====================================
+
+            if (
+                cleaningEnabled
+            ) {
+
+                cleaningSettingValue.textContent =
+                    "YES";
+
+
+                cleaningSettingValue.style.color =
+                    "#74c7ff";
+
+
+                cleaningDurationSetting.style.display =
+                    "flex";
+
+
+                cleaningDurationValue.textContent =
+                    cleaningTurns +
+                    "턴";
+
+            }
+
+            else {
+
+                cleaningSettingValue.textContent =
+                    "NO";
+
+
+                cleaningSettingValue.style.color =
+                    "#aaa";
+
+
+                cleaningDurationSetting.style.display =
+                    "none";
+
+
+                cleaningLiveStatus.style.display =
+                    "none";
+            }
+
+
+
+            // ====================================
+            // 현재 cleaningEvent 가져오기
+            //
+            // game.js:
+            // global let cleaningEvent
+            //
+            // person-game.js:
+            // window.cleaningEvent
+            // ====================================
+
+            function getCleaningEvent() {
+
+
+                /*
+                person-game.js
+                */
+
+                if (
+                    window.cleaningEvent
+                ) {
+
+                    return window.cleaningEvent;
+                }
+
+
+                /*
+                game.js
+                */
+
+                try {
+
+                    if (
+                        typeof cleaningEvent !==
+                        "undefined"
+                    ) {
+
+                        return cleaningEvent;
+                    }
+
+                }
+
+                catch (
+                    error
+                ) {
+
+                    return null;
+                }
+
+
+                return null;
+            }
+
+
+
+            // ====================================
+            // 실시간 청소 상태
+            // ====================================
+
+            function updateCleaningStatus() {
+
+
+                if (
+                    !cleaningEnabled
+                ) {
+
+                    cleaningLiveStatus.style.display =
+                        "none";
+
+
+                    return;
+                }
+
+
+                const event =
+                    getCleaningEvent();
+
+
+                /*
+                이벤트 없음
+                */
+
+                if (
+                    !event
+                ) {
+
+                    cleaningLiveStatus.style.display =
+                        "none";
+
+
+                    cleaningLiveStatus
+                        .classList.remove(
+                            "active"
+                        );
+
+
+                    return;
+                }
+
+
+                /*
+                예고중
+                */
+
+                if (
+                    event.status ===
+                    "announced"
+                ) {
+
+                    cleaningLiveStatus.style.display =
+                        "flex";
+
+
+                    cleaningLiveStatus
+                        .classList.remove(
+                            "active"
+                        );
+
+
+                    cleaningLiveLabel.textContent =
+                        "청소 이벤트";
+
+
+                    cleaningLiveValue.textContent =
+                        "시작까지 " +
+                        event.turnsUntilStart +
+                        "턴";
+
+
+                    return;
+                }
+
+
+                /*
+                청소중
+                */
+
+                if (
+                    event.status ===
+                    "active"
+                ) {
+
+                    cleaningLiveStatus.style.display =
+                        "flex";
+
+
+                    cleaningLiveStatus
+                        .classList.add(
+                            "active"
+                        );
+
+
+                    cleaningLiveLabel.textContent =
+                        "청소 중";
+
+
+                    cleaningLiveValue.textContent =
+                        event.remainingTurns +
+                        "턴 남음";
+
+
+                    return;
+                }
+
+
+                cleaningLiveStatus.style.display =
+                    "none";
+            }
+
+
+
+            // ====================================
+            // 게임 JS가 로드된 뒤
+            // 상태 감시 시작
+            // ====================================
+
+            window.startGameSettingStatus =
+                function () {
+
+
+                    updateCleaningStatus();
+
+
+                    window.setInterval(
+                        updateCleaningStatus,
+                        250
+                    );
+                };
+
+
+        })();
+
+    </script>
+
+
+
+    <!-- ========================================
+         게임 JS 선택
+
+         AI     -> game.js
+         PERSON -> person-game.js
+    ======================================== -->
+
+    <script>
+
+        (() => {
+
+
+            const mode =
+                new URLSearchParams(
+                    window.location.search
+                )
+                .get(
+                    "mode"
+                );
+
+
+            const gameScript =
+                document.createElement(
+                    "script"
+                );
+
+
+            if (
+                mode === "person"
+            ) {
+
+                gameScript.src =
+                    "person-game.js";
+
+            }
+
+            else {
+
+                gameScript.src =
+                    "game.js";
+            }
+
+
+            gameScript.onload =
+                () => {
+
+
+                    if (
+                        typeof window
+                            .startGameSettingStatus ===
+                        "function"
+                    ) {
+
+                        window
+                            .startGameSettingStatus();
+                    }
+
+                };
+
+
+            gameScript.onerror =
+                () => {
+
+                    alert(
+                        "게임 스크립트를 불러오지 못했습니다."
+                    );
+
+                };
+
+
+            document.body.appendChild(
+                gameScript
+            );
+
+
+        })();
+
+    </script>
+
+
+</body>
+
+</html>
